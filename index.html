@@ -1271,27 +1271,28 @@ function serviceForm(){
 //留置車両入力フォーム作成
 function depotForm(){
  let inner=[];
- for(num=11;num<=27;num++){
+ let loctag = {
+  11: "藤沢駅<br>",
+  12: "江ノ島駅<br>1番線",
+  13: "2番線",
+  14: "江ノ島留置線<br>#1",
+  15: "#3",
+  16: "#4",
+  17: "稲村ヶ崎駅<br>1番線",
+  18: "2番線",
+  19: "極楽寺検車区<br>引込線",
+  20: "#1",
+  21: "#2",
+  22: "#3",
+  23: "#4",
+  24: "#5",
+  25: "#6",
+  26: "鎌倉駅<br>3番線 ",
+  27: "4番線 "
+ }
+ for(num in loctag){
    depotRow=['<p id="row'+num+'">'];
-   switch(num){
-    case 11:depotRow.push("藤沢駅<br>");break;
-    case 12:depotRow.push("江ノ島駅<br>1番線");break;
-    case 13:depotRow.push("2番線");break;
-    case 14:depotRow.push("江ノ島留置線<br>#1");break;
-    //case 15:depotRow.push("#3");break;
-    case 16:depotRow.push("#4");break;
-    case 17:depotRow.push("稲村ヶ崎駅<br>1番線");break;
-    case 18:depotRow.push("2番線");break;
-    case 19:depotRow.push("極楽寺検車区<br>引込線");break;
-    case 20:depotRow.push("#1");break;
-    case 21:depotRow.push("#2");break;
-    case 22:depotRow.push("#3");break;
-    case 23:depotRow.push("#4");break;
-    case 24:depotRow.push("#5");break;
-    case 25:depotRow.push("#6");break;
-    case 26:depotRow.push("鎌倉駅<br>3番線");break;
-    case 27:depotRow.push("4番線");break;
-   }
+   depotRow.push(loctag[num]);
 
    depotRow.push(
     '<select id="t'+num+'b" onChange="trainset(this);changeColor(this.id);"><option value="">----</option></select>',
@@ -1567,7 +1568,7 @@ function outp() {
     form.t109b.value, form.t109d.value, form.t110b.value, form.t110d.value,
     form.t111b.value, form.t111d.value, form.t112b.value, form.t112d.value,
     form.t11b.value, form.t11d.value, form.t12b.value, form.t12d.value,
-    form.t13b.value, form.t13d.value, form.t14b.value, form.t15b.value,
+    form.t13b.value, form.t13d.value, form.t14b.value, 
     form.t16b.value, form.t16d.value, form.t17b.value, form.t17d.value,
     form.t18b.value, form.t18d.value, form.t19b.value, form.t19d.value,
     form.t20b.value, form.t20d.value, form.t21b.value, form.t21d.value,
