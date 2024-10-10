@@ -1414,6 +1414,26 @@ function timeset() {
 }
 
 function trainset(e) {
+  let loclen = {
+    11: 4,
+    12: 4,
+    13: 2,
+    14: 2,
+    15: 2,
+    16: 4,
+    17: 4,
+    18: 4,
+    19: 4,
+    20: 4,
+    21: 4,
+    22: 4,
+    23: 4,
+    24: 4,
+    25: 4,
+    26: 4,
+    27: 4
+ }
+  
   //使用済の選択肢をリスト化
   let usearr = [
     form.t101b.value, form.t101d.value, form.t102b.value, form.t102d.value,
@@ -1432,15 +1452,14 @@ function trainset(e) {
     form.t26b.value, form.t26d.value, form.t27b.value, form.t27d.value
   ];
 
-console.log(e);
-if(e!==undefined){
- cnt = ( (","+usearr.join(",")).match( new RegExp("," + e.value, "g" ) ) || [] ).length ;
- if(cnt>1&&e.value!==""&&e.value!=="不明"){
-  r=window.confirm(e.value+"が複数回入力されています。合っていますか？");
-  if(!r){document.getElementById(e.id).value="";return false}
- }
-
-}
+  console.log(e);
+  if(e!==undefined){
+    cnt = ( (","+usearr.join(",")).match( new RegExp("," + e.value, "g" ) ) || [] ).length ;
+    if(cnt>1&&e.value!==""&&e.value!=="不明"){
+      r=window.confirm(e.value+"が複数回入力されています。合っていますか？");
+      if(!r){document.getElementById(e.id).value="";return false}
+    }
+  }
 
   for (let i = 0; i < usearr.length; i++) {
     if (usearr[i] == "" || usearr[i] == "不明") {
@@ -1468,11 +1487,11 @@ if(e!==undefined){
       document.getElementById("t" + i + "d").innerHTML = inner;
     }
   }
-  for (i = 11; i < 28; i++) {
+  for (i in loclen) {
     if (document.getElementById("t" + i + "b").value == "") {
       document.getElementById("t" + i + "b").innerHTML = inner;
     }
-    if(i<=13 || i>=16){
+    if(loclen[i] == 4){
      if (document.getElementById("t" + i + "d").value == "") {
       document.getElementById("t" + i + "d").innerHTML = inner;
     }}
@@ -1480,7 +1499,27 @@ if(e!==undefined){
   outp();
 }
 
-function outp() {
+function outp() { 
+  // 駅の位置を定義
+  let loctag = {
+    11: "藤沢駅<br>",
+    12: "江ノ島駅<br>1番線",
+    13: "2番線",
+    14: "江ノ島留置線<br>#1",
+    15: "#3",
+    16: "#4",
+    17: "稲村ヶ崎駅<br>1番線",
+    18: "2番線",
+    19: "極楽寺検車区<br>引込線",
+    20: "#1",
+    21: "#2",
+    22: "#3",
+    23: "#4",
+    24: "#5",
+    25: "#6",
+    26: "鎌倉駅<br>3番線 ",
+    27: "4番線 "
+  }
   // 基準駅未選択
   if (form.stations.value<0) {
     alert("先に基準となる駅を選択してください。");
@@ -1497,7 +1536,7 @@ function outp() {
     form.out.value = "";
 
  //留置車両の選択肢に応じてプルダウンをdisabled
-  for (i = 11; i <= 27; i++) {
+  for (i in loctag) {
   if(document.getElementById("t"+i+"g").value=="・"){
    document.getElementById("t"+i+"q").disabled=false;
   }else{
