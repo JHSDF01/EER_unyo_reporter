@@ -1276,7 +1276,6 @@ function depotForm(){
   12: "江ノ島駅<br>1番線",
   13: "2番線",
   14: "江ノ島留置線<br>#1",
-  15: "#3",
   16: "#4",
   17: "稲村ヶ崎駅<br>1番線",
   18: "2番線",
@@ -1318,11 +1317,6 @@ function depotForm(){
  document.getElementById("t14e").style.visibility= "collapse";
  document.getElementById("t14r").style.display= "none";
  document.getElementById("t14q").style.display= "none";
- document.getElementById("t15g").style.display= "none";
- document.getElementById("t15d").style.display= "none";
- document.getElementById("t15e").style.visibility= "collapse";
- document.getElementById("t15r").style.display= "none";
- document.getElementById("t15q").style.display= "none";
  //江ノ島留置線と極楽寺検車区は初期表示を「・」にする
  document.getElementById("t16g").value= "・";
  document.getElementById("t19g").value= "・";
@@ -1419,7 +1413,6 @@ function trainset(e) {
     12: 4,
     13: 2,
     14: 2,
-    15: 2,
     16: 4,
     17: 4,
     18: 4,
@@ -1443,7 +1436,7 @@ function trainset(e) {
     form.t109b.value, form.t109d.value, form.t110b.value, form.t110d.value,
     form.t111b.value, form.t111d.value, form.t112b.value, form.t112d.value,
     form.t11b.value, form.t11d.value, form.t12b.value, form.t12d.value,
-    form.t13b.value, form.t13d.value, form.t14b.value, form.t15b.value,
+    form.t13b.value, form.t13d.value, form.t14b.value, 
     form.t16b.value, form.t16d.value, form.t17b.value, form.t17d.value,
     form.t18b.value, form.t18d.value, form.t19b.value, form.t19d.value,
     form.t20b.value, form.t20d.value, form.t21b.value, form.t21d.value,
@@ -1506,7 +1499,6 @@ function outp() {
     12: "江ノ島駅<br>1番線",
     13: "2番線",
     14: "江ノ島留置線<br>#1",
-    15: "#3",
     16: "#4",
     17: "稲村ヶ崎駅<br>1番線",
     18: "2番線",
@@ -1873,7 +1865,6 @@ function depot_input() {
     form.t12b.value + form.t12c.value + form.t12d.value + form.t12e.value,
     form.t13b.value + form.t13c.value + form.t13d.value + form.t13e.value,
     form.t14b.value + form.t14c.value,
-    form.t15b.value + form.t15c.value,
     form.t16b.value + form.t16c.value + form.t16d.value + form.t16e.value,
     form.t17b.value + form.t17c.value + form.t17d.value + form.t17e.value,
     form.t18b.value + form.t18c.value + form.t18d.value + form.t18e.value,
