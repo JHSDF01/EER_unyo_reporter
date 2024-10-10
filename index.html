@@ -1271,27 +1271,27 @@ function serviceForm(){
 //留置車両入力フォーム作成
 function depotForm(){
  let inner=[];
- for(num=11;num<=27;num++){
+ let loctag = {
+  11: "藤沢駅<br>",
+  12: "江ノ島駅<br>1番線",
+  13: "2番線",
+  14: "江ノ島留置線<br>#1",
+  16: "#4",
+  17: "稲村ヶ崎駅<br>1番線",
+  18: "2番線",
+  19: "極楽寺検車区<br>引込線",
+  20: "#1",
+  21: "#2",
+  22: "#3",
+  23: "#4",
+  24: "#5",
+  25: "#6",
+  26: "鎌倉駅<br>3番線 ",
+  27: "4番線 "
+ }
+ for(num in loctag){
    depotRow=['<p id="row'+num+'">'];
-   switch(num){
-    case 11:depotRow.push("藤沢駅<br>");break;
-    case 12:depotRow.push("江ノ島駅<br>1番線");break;
-    case 13:depotRow.push("2番線");break;
-    case 14:depotRow.push("江ノ島留置線<br>#1");break;
-    //case 15:depotRow.push("#3");break;
-    case 16:depotRow.push("#4");break;
-    case 17:depotRow.push("稲村ヶ崎駅<br>1番線");break;
-    case 18:depotRow.push("2番線");break;
-    case 19:depotRow.push("極楽寺検車区<br>引込線");break;
-    case 20:depotRow.push("#1");break;
-    case 21:depotRow.push("#2");break;
-    case 22:depotRow.push("#3");break;
-    case 23:depotRow.push("#4");break;
-    case 24:depotRow.push("#5");break;
-    case 25:depotRow.push("#6");break;
-    case 26:depotRow.push("鎌倉駅<br>3番線");break;
-    case 27:depotRow.push("4番線");break;
-   }
+   depotRow.push(loctag[num]);
 
    depotRow.push(
     '<select id="t'+num+'b" onChange="trainset(this);changeColor(this.id);"><option value="">----</option></select>',
@@ -1317,11 +1317,6 @@ function depotForm(){
  document.getElementById("t14e").style.visibility= "collapse";
  document.getElementById("t14r").style.display= "none";
  document.getElementById("t14q").style.display= "none";
- document.getElementById("t15g").style.display= "none";
- document.getElementById("t15d").style.display= "none";
- document.getElementById("t15e").style.visibility= "collapse";
- document.getElementById("t15r").style.display= "none";
- document.getElementById("t15q").style.display= "none";
  //江ノ島留置線と極楽寺検車区は初期表示を「・」にする
  document.getElementById("t16g").value= "・";
  document.getElementById("t19g").value= "・";
@@ -1413,6 +1408,25 @@ function timeset() {
 }
 
 function trainset(e) {
+  let loclen = {
+    11: 4,
+    12: 4,
+    13: 2,
+    14: 2,
+    16: 4,
+    17: 4,
+    18: 4,
+    19: 4,
+    20: 4,
+    21: 4,
+    22: 4,
+    23: 4,
+    24: 4,
+    25: 4,
+    26: 4,
+    27: 4
+ }
+  
   //使用済の選択肢をリスト化
   let usearr = [
     form.t101b.value, form.t101d.value, form.t102b.value, form.t102d.value,
@@ -1422,7 +1436,7 @@ function trainset(e) {
     form.t109b.value, form.t109d.value, form.t110b.value, form.t110d.value,
     form.t111b.value, form.t111d.value, form.t112b.value, form.t112d.value,
     form.t11b.value, form.t11d.value, form.t12b.value, form.t12d.value,
-    form.t13b.value, form.t13d.value, form.t14b.value, form.t15b.value,
+    form.t13b.value, form.t13d.value, form.t14b.value, 
     form.t16b.value, form.t16d.value, form.t17b.value, form.t17d.value,
     form.t18b.value, form.t18d.value, form.t19b.value, form.t19d.value,
     form.t20b.value, form.t20d.value, form.t21b.value, form.t21d.value,
@@ -1431,15 +1445,14 @@ function trainset(e) {
     form.t26b.value, form.t26d.value, form.t27b.value, form.t27d.value
   ];
 
-console.log(e);
-if(e!==undefined){
- cnt = ( (","+usearr.join(",")).match( new RegExp("," + e.value, "g" ) ) || [] ).length ;
- if(cnt>1&&e.value!==""&&e.value!=="不明"){
-  r=window.confirm(e.value+"が複数回入力されています。合っていますか？");
-  if(!r){document.getElementById(e.id).value="";return false}
- }
-
-}
+  console.log(e);
+  if(e!==undefined){
+    cnt = ( (","+usearr.join(",")).match( new RegExp("," + e.value, "g" ) ) || [] ).length ;
+    if(cnt>1&&e.value!==""&&e.value!=="不明"){
+      r=window.confirm(e.value+"が複数回入力されています。合っていますか？");
+      if(!r){document.getElementById(e.id).value="";return false}
+    }
+  }
 
   for (let i = 0; i < usearr.length; i++) {
     if (usearr[i] == "" || usearr[i] == "不明") {
@@ -1467,11 +1480,11 @@ if(e!==undefined){
       document.getElementById("t" + i + "d").innerHTML = inner;
     }
   }
-  for (i = 11; i < 28; i++) {
+  for (i in loclen) {
     if (document.getElementById("t" + i + "b").value == "") {
       document.getElementById("t" + i + "b").innerHTML = inner;
     }
-    if(i<=13 || i>=16){
+    if(loclen[i] == 4){
      if (document.getElementById("t" + i + "d").value == "") {
       document.getElementById("t" + i + "d").innerHTML = inner;
     }}
@@ -1479,7 +1492,26 @@ if(e!==undefined){
   outp();
 }
 
-function outp() {
+function outp() { 
+  // 駅の位置を定義
+  let loctag = {
+    11: "藤沢駅<br>",
+    12: "江ノ島駅<br>1番線",
+    13: "2番線",
+    14: "江ノ島留置線<br>#1",
+    16: "#4",
+    17: "稲村ヶ崎駅<br>1番線",
+    18: "2番線",
+    19: "極楽寺検車区<br>引込線",
+    20: "#1",
+    21: "#2",
+    22: "#3",
+    23: "#4",
+    24: "#5",
+    25: "#6",
+    26: "鎌倉駅<br>3番線 ",
+    27: "4番線 "
+  }
   // 基準駅未選択
   if (form.stations.value<0) {
     alert("先に基準となる駅を選択してください。");
@@ -1496,7 +1528,7 @@ function outp() {
     form.out.value = "";
 
  //留置車両の選択肢に応じてプルダウンをdisabled
-  for (i = 11; i <= 27; i++) {
+  for (i in loctag) {
   if(document.getElementById("t"+i+"g").value=="・"){
    document.getElementById("t"+i+"q").disabled=false;
   }else{
@@ -1567,7 +1599,7 @@ function outp() {
     form.t109b.value, form.t109d.value, form.t110b.value, form.t110d.value,
     form.t111b.value, form.t111d.value, form.t112b.value, form.t112d.value,
     form.t11b.value, form.t11d.value, form.t12b.value, form.t12d.value,
-    form.t13b.value, form.t13d.value, form.t14b.value, form.t15b.value,
+    form.t13b.value, form.t13d.value, form.t14b.value, 
     form.t16b.value, form.t16d.value, form.t17b.value, form.t17d.value,
     form.t18b.value, form.t18d.value, form.t19b.value, form.t19d.value,
     form.t20b.value, form.t20d.value, form.t21b.value, form.t21d.value,
@@ -1703,6 +1735,9 @@ function numToNote(num){
 function outpDepot() {
   let arr = [];
   for (i = 11; i <= 27; i++) {
+    if (i==15){
+      continue;
+    }
   e={"b":selectedValue("t"+i+"b"),
      "c":document.getElementById("t"+i+"c").value,
      "d":selectedValue("t"+i+"d"),
@@ -1732,28 +1767,33 @@ function outpDepot() {
 }
 
  //藤沢駅
- e[0]="藤沢駅 "+e[0];
- e[1]="江ノ島駅\n1番線 "+e[1];
- e[2]="2番線 "+e[2];
- e[3]="江ノ島留置線\n#1 "+e[3];
- e[4]="#3 "+e[4];
- e[5]="#4 "+e[5];
- e[6]="稲村ヶ崎駅\n1番線 "+e[6];
- e[7]="2番線 "+e[7];
- e[8]="極楽寺検車区\n引込線 "+e[8];
- e[9]="#1 "+e[9];
- e[10]="#2 "+e[10];
- e[11]="#3 "+e[11];
- e[12]="#4 "+e[12];
- e[13]="#5 "+e[13];
- e[14]="#6 "+e[14];
- e[15]="鎌倉駅\n3番線 "+e[15];
- e[16]="4番線 "+e[16];
+ let localtion = [
+  "藤沢駅 ",
+  "江ノ島駅\n1番線 ",
+  "2番線 ",
+  "江ノ島留置線\n#1 ",
+  "#4 ",
+  "稲村ヶ崎駅\n1番線 ",
+  "2番線 ",
+  "極楽寺検車区\n引込線 ",
+  "#1 ",
+  "#2 ",
+  "#3 ",
+  "#4 ",
+  "#5 ",
+  "#6 ",
+  "鎌倉駅\n3番線 ",
+  "4番線 "
+ ]
+  
+ for(i in localtion) {
+  e[i]=localtion[i]+e[i];
+ }
 
  e.push("");
  e=e.join("\n")
     .replace("藤沢駅 \n","").replace("江ノ島駅\n1番線 \n2番線 \n","")
-    .replace("江ノ島留置線\n#1 \n#3 \n#4 \n","")
+    .replace("江ノ島留置線\n#1 \n#4 \n","")
     .replace("稲村ヶ崎駅\n1番線 \n2番線 \n","")
     .replace("極楽寺検車区\n引込線 \n#1 \n#2 \n#3 \n#4 \n#5 \n#6 \n","")
     .replace("鎌倉駅\n3番線 \n4番線 \n","")
@@ -1825,7 +1865,6 @@ function depot_input() {
     form.t12b.value + form.t12c.value + form.t12d.value + form.t12e.value,
     form.t13b.value + form.t13c.value + form.t13d.value + form.t13e.value,
     form.t14b.value + form.t14c.value,
-    form.t15b.value + form.t15c.value,
     form.t16b.value + form.t16c.value + form.t16d.value + form.t16e.value,
     form.t17b.value + form.t17c.value + form.t17d.value + form.t17e.value,
     form.t18b.value + form.t18c.value + form.t18d.value + form.t18e.value,
