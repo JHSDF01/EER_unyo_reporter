@@ -1101,42 +1101,47 @@ const consoleMsg="Thank you for your ENODEN report!"
 console.log(consoleMsg);
 
 class Depot {
-  constructor(id, tag, len){
+  constructor(id, tag, len, pair){
     this._id = id;
     this._tag = tag;
     this._len = len;
+    this._pair = pair
   }
-
+  // 番号（現在は元の数値を使っているがいずれ文字列にする）
   get id() {
     return this._id;
   }
-
+  // htmlで指定する名称
   get tag() {
     return this._tag;
   }
-
+  // 留置線の収容両数（江ノ電の場合は2両か4両）
   get len() {
     return this._len;
+  }
+  // 通常連結した状態で留置するか（true/false）
+  get pair() {
+    return this._pair
   }
 }
 
 var depots = [
-  new Depot(11, "藤沢駅<br>", 4),
-  new Depot(12, "江ノ島駅<br>1番線", 4),
-  new Depot(13, "2番線", 4),
-  new Depot(14, "江ノ島留置線<br>#1", 2),
-  new Depot(16, "#4", 4),
-  new Depot(17, "稲村ヶ崎駅<br>1番線", 4),
-  new Depot(18, "2番線", 4),
-  new Depot(19, "極楽寺検車区<br>引込線", 4),
-  new Depot(20, "#1", 4),
-  new Depot(21, "#2", 4),
-  new Depot(22, "#3", 4),
-  new Depot(23, "#4", 4),
-  new Depot(24, "#5", 4),
-  new Depot(25, "#6", 4),
-  new Depot(26, "鎌倉駅<br>3番線", 4),
-  new Depot(27, "4番線", 4),
+  new Depot(11, "藤沢駅<br>", 4, true),
+  new Depot(12, "江ノ島駅<br>1番線", 4, true),
+  new Depot(13, "2番線", 4, true),
+  new Depot(14, "江ノ島留置線<br>#1", 2, false),
+  new Depot(16, "#4", 4, false),
+  new Depot(17, "稲村ヶ崎駅<br>1番線", 4, true),
+  new Depot(18, "2番線", 4, true),
+  new Depot(19, "極楽寺検車区<br>引込線", 4, false),
+  new Depot(20, "#1", 4, false),
+  new Depot(21, "#2", 4, false),
+  new Depot(22, "#3", 4, false),
+  new Depot(23, "#4", 4, false),
+  new Depot(24, "#5", 4, false),
+  new Depot(25, "#6", 4, false),
+  new Depot(26, "鎌倉駅<br>3番線", 4, true),
+  new Depot(27, "4番線", 4, true),
 ];
 
 //初期処理
@@ -1330,21 +1335,22 @@ function depotForm(){
 
   }
  document.getElementById("otherTrain").innerHTML=inner.join("\n");
- //江ノ島留置線#1,#3は1編成しか表示しない
- document.getElementById("t14g").style.display= "none";
- document.getElementById("t14d").style.display= "none";
- document.getElementById("t14e").style.visibility= "collapse";
- document.getElementById("t14r").style.display= "none";
- document.getElementById("t14q").style.display= "none";
- //江ノ島留置線と極楽寺検車区は初期表示を「・」にする
- document.getElementById("t16g").value= "・";
- document.getElementById("t19g").value= "・";
- document.getElementById("t20g").value= "・";
- document.getElementById("t21g").value= "・";
- document.getElementById("t22g").value= "・";
- document.getElementById("t23g").value= "・";
- document.getElementById("t24g").value= "・";
- document.getElementById("t25g").value= "・";
+ for(let depot of depots){
+  if(depot.len==2){
+    //短い留置線は1編成しか表示しない
+    document.getElementById("t"+depot.id+"g").style.display= "none";
+    document.getElementById("t"+depot.id+"d").style.display= "none";
+    document.getElementById("t"+depot.id+"e").style.visibility= "collapse";
+    document.getElementById("t"+depot.id+"r").style.display= "none";
+    document.getElementById("t"+depot.id+"q").style.display= "none";
+    // 短い留置線の処理はここで終わり
+    continue;
+  }
+  if(!depot.pair){
+    //通常切り離した状態で留置されている江ノ島留置線と極楽寺検車区は初期表示を「・」にする
+    document.getElementById("t"+depot.id+"g").value= "・";
+  }
+ }
 }
 
 //時刻表の設定
