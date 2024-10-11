@@ -1100,7 +1100,44 @@ if(qu.length > 0){
 const consoleMsg="Thank you for your ENODEN report!"
 console.log(consoleMsg);
 
+class Depot {
+  constructor(id, tag, len){
+    this._id = id;
+    this._tag = tag;
+    this._len = len;
+  }
 
+  get id() {
+    return this._id;
+  }
+
+  get tag() {
+    return this._tag;
+  }
+
+  get len() {
+    return this._len;
+  }
+}
+
+var depots = [
+  new Depot(11, "藤沢駅<br>", 4),
+  new Depot(12, "江ノ島駅<br>1番線", 4),
+  new Depot(13, "2番線", 4),
+  new Depot(14, "江ノ島留置線<br>#1", 2),
+  new Depot(16, "#4", 4),
+  new Depot(17, "稲村ヶ崎駅<br>1番線", 4),
+  new Depot(18, "2番線", 4),
+  new Depot(19, "極楽寺検車区<br>引込線", 4),
+  new Depot(20, "#1", 4),
+  new Depot(21, "#2", 4),
+  new Depot(22, "#3", 4),
+  new Depot(23, "#4", 4),
+  new Depot(24, "#5", 4),
+  new Depot(25, "#6", 4),
+  new Depot(26, "鎌倉駅<br>3番線", 4),
+  new Depot(27, "4番線", 4),
+];
 
 //初期処理
 function auto() {
@@ -1271,41 +1308,23 @@ function serviceForm(){
 //留置車両入力フォーム作成
 function depotForm(){
  let inner=[];
- let loctag = {
-  11: "藤沢駅<br>",
-  12: "江ノ島駅<br>1番線",
-  13: "2番線",
-  14: "江ノ島留置線<br>#1",
-  16: "#4",
-  17: "稲村ヶ崎駅<br>1番線",
-  18: "2番線",
-  19: "極楽寺検車区<br>引込線",
-  20: "#1",
-  21: "#2",
-  22: "#3",
-  23: "#4",
-  24: "#5",
-  25: "#6",
-  26: "鎌倉駅<br>3番線 ",
-  27: "4番線 "
- }
- for(num in loctag){
-   depotRow=['<p id="row'+num+'">'];
-   depotRow.push(loctag[num]);
+ for(let depot of depots){
+   depotRow=['<p id="row'+depot.id+'">'];
+   depotRow.push(depot.tag);
 
    depotRow.push(
-    '<select id="t'+num+'b" onChange="trainset(this);changeColor(this.id);"><option value="">----</option></select>',
-    '<span class="detail"><input id="t'+num+'c" type="text" onChange="trainset();" class="textbox" style="display:none;">',
-    '<select id="t'+num+'q" onChange="outp();" class="pan" style="display:none;"><option value="">(パンタ)</option><option value="全">↑全パン</option><option value="F↑">F↑</option><option value="K↑">K↑</option><option value="下げ">↓下</option></select>',
+    '<select id="t'+depot.id+'b" onChange="trainset(this);changeColor(this.id);"><option value="">----</option></select>',
+    '<span class="detail"><input id="t'+depot.id+'c" type="text" onChange="trainset();" class="textbox" style="display:none;">',
+    '<select id="t'+depot.id+'q" onChange="outp();" class="pan" style="display:none;"><option value="">(パンタ)</option><option value="全">↑全パン</option><option value="F↑">F↑</option><option value="K↑">K↑</option><option value="下げ">↓下</option></select>',
     '<span class="textbox"><br class="sp"></span></span>',
-    '<select id="t'+num+'g" onChange="trainset();"><option value="・">・</option><option value="/">/</option><option value="+" selected>+</option></select>',
-    '<select id="t'+num+'d" onChange="trainset(this);changeColor(this.id);"><option value="">----</option></select>',
-    '<span class="detail"><input id="t'+num+'e" type="text" onChange="trainset();" class="textbox" style="display:none;"></span>',
+    '<select id="t'+depot.id+'g" onChange="trainset();"><option value="・">・</option><option value="/">/</option><option value="+" selected>+</option></select>',
+    '<select id="t'+depot.id+'d" onChange="trainset(this);changeColor(this.id);"><option value="">----</option></select>',
+    '<span class="detail"><input id="t'+depot.id+'e" type="text" onChange="trainset();" class="textbox" style="display:none;"></span>',
     '<span class="detail">',
-    '<span id="t'+num+'r" onClick="reverse(this.id);outp();" class="reverse" nowrap>反転</span>',
-    '<select id="t'+num+'p" onChange="outp();" class="pan" style="display:none;"><option value="">(パンタ)</option><option value="全">↑全パン</option><option value="F↑">F↑</option><option value="K↑">K↑</option><option value="下げ">↓下</option></select>',
+    '<span id="t'+depot.id+'r" onClick="reverse(this.id);outp();" class="reverse" nowrap>反転</span>',
+    '<select id="t'+depot.id+'p" onChange="outp();" class="pan" style="display:none;"><option value="">(パンタ)</option><option value="全">↑全パン</option><option value="F↑">F↑</option><option value="K↑">K↑</option><option value="下げ">↓下</option></select>',
     '</span>',
-    '<span id="t'+num+'x"></span>');
+    '<span id="t'+depot.id+'x"></span>');
     depotRow.push('</p>');
     inner.push(depotRow.join(""));
 
@@ -1408,24 +1427,6 @@ function timeset() {
 }
 
 function trainset(e) {
-  let loclen = {
-    11: 4,
-    12: 4,
-    13: 2,
-    14: 4,
-    16: 4,
-    17: 4,
-    18: 4,
-    19: 4,
-    20: 4,
-    21: 4,
-    22: 4,
-    23: 4,
-    24: 4,
-    25: 4,
-    26: 4,
-    27: 4
- }
   
   //使用済の選択肢をリスト化
   let usearr = [
@@ -1480,38 +1481,19 @@ function trainset(e) {
       document.getElementById("t" + i + "d").innerHTML = inner;
     }
   }
-  for (i in loclen) {
-    if (document.getElementById("t" + i + "b").value == "") {
-      document.getElementById("t" + i + "b").innerHTML = inner;
+  for (let depot of depots) {
+    if (document.getElementById("t" + depot.id + "b").value == "") {
+      document.getElementById("t" + depot.id + "b").innerHTML = inner;
     }
-    if(loclen[i] == 4){
-     if (document.getElementById("t" + i + "d").value == "") {
-      document.getElementById("t" + i + "d").innerHTML = inner;
+    if(depot.len == 4){
+     if (document.getElementById("t" + depot.id + "d").value == "") {
+      document.getElementById("t" + depot.id + "d").innerHTML = inner;
     }}
   }
   outp();
 }
 
 function outp() { 
-  // 駅の位置を定義
-  let loctag = {
-    11: "藤沢駅<br>",
-    12: "江ノ島駅<br>1番線",
-    13: "2番線",
-    14: "江ノ島留置線<br>#1",
-    16: "#4",
-    17: "稲村ヶ崎駅<br>1番線",
-    18: "2番線",
-    19: "極楽寺検車区<br>引込線",
-    20: "#1",
-    21: "#2",
-    22: "#3",
-    23: "#4",
-    24: "#5",
-    25: "#6",
-    26: "鎌倉駅<br>3番線 ",
-    27: "4番線 "
-  }
   // 基準駅未選択
   if (form.stations.value<0) {
     alert("先に基準となる駅を選択してください。");
@@ -1528,11 +1510,11 @@ function outp() {
     form.out.value = "";
 
  //留置車両の選択肢に応じてプルダウンをdisabled
-  for (i in loctag) {
-  if(document.getElementById("t"+i+"g").value=="・"){
-   document.getElementById("t"+i+"q").disabled=false;
+  for (let depot of depots) {
+  if(document.getElementById("t"+depot.id+"g").value=="・"){
+   document.getElementById("t"+depot.id+"q").disabled=false;
   }else{
-   document.getElementById("t"+i+"q").disabled=true;
+   document.getElementById("t"+depot.id+"q").disabled=true;
   }
   }
 
@@ -1734,17 +1716,14 @@ function numToNote(num){
 //留置列車生成
 function outpDepot() {
   let arr = [];
-  for (i = 11; i <= 27; i++) {
-    if (i==15){
-      continue;
-    }
-  e={"b":selectedValue("t"+i+"b"),
-     "c":document.getElementById("t"+i+"c").value,
-     "d":selectedValue("t"+i+"d"),
-     "e":document.getElementById("t"+i+"e").value,
-     "g":document.getElementById("t"+i+"g").value,
-     "q":selectedValue("t"+i+"q"),
-     "p":selectedValue("t"+i+"p")};
+  for (let depot of depots) {
+  e={"b":selectedValue("t"+depot.id+"b"),
+     "c":document.getElementById("t"+depot.id+"c").value,
+     "d":selectedValue("t"+depot.id+"d"),
+     "e":document.getElementById("t"+depot.id+"e").value,
+     "g":document.getElementById("t"+depot.id+"g").value,
+     "q":selectedValue("t"+depot.id+"q"),
+     "p":selectedValue("t"+depot.id+"p")};
   arr.push(e);
  }
 
