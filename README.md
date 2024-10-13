@@ -11,11 +11,17 @@ https://enodenwiki.web.fc2.com/
 
 ### 前提
 
+以下はWindows上のGit bashと、WSL環境のUbuntuで確認した。
+
 - shellコマンドを実行可能であること
- - OSがUbuntuなどのLinuxマシンである
- - Windowsの場合、たとえば[Git bash](https://git-scm.com/downloads/win)などを利用する。
-- powershell が実行可能であること。
-  ※今後CIで勝手にデプロイ出来たらいいなという思いもあって、UNIX環境でも動くように考慮はしたがテストしていない。
+  - OSがUbuntuなどのLinuxマシンである
+  - Windowsの場合、たとえば[Git bash](https://git-scm.com/downloads/win)などを利用する。
+
+- windows OSの場合
+  - powershell が実行可能であること。
+- Unix OSの場合
+  - zip コマンドが利用できること。
+    - yumやaptなどであらかじめ入手しておく
 
 
 ### build.sh内部仕様
