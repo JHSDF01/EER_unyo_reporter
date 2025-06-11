@@ -873,7 +873,7 @@ const ttIn=[
 <!-- チェックボックス系 -->
 <span class="detail" >
 追記欄
-<input id="txtmode" type="checkbox" onClick="clsBtn(this.id,'textbox');"><label for="txtmode" class="check left">車両注記</label><input id="pmode" type="checkbox" onClick="clsBtn(this.id,'pan');"><label for="pmode" class="check center">パンタ</label><input id="depotmode" type="checkbox" onClick="depotBtn();"><label for="depotmode" class="check right">留置車両</label>
+<input id="txtmode" type="checkbox" onClick="clsBtn(this.id,'textbox');"><label for="txtmode" class="check left">車両注記</label><input id="pmode" type="checkbox" onClick="clsBtn(this.id,'pan');"><label for="pmode" class="check center">パンタ</label><input id="depotmode" type="checkbox" onClick="depotBtn();"><label for="depotmode" class="check center">留置車両</label><input id="carchangemode" type="checkbox" onClick="depotBtn();"><label for="carchangemode" class="check right">車両交換</label>
 <br></span>
 <span class="s">←藤沢　海側から見たときの組成　鎌倉→</span>
 </div>
@@ -1672,28 +1672,34 @@ function outpService(text){
   note="";
   e="u"+arr[i].u+arr[i].b+arr[i].d+"p"+arr[i].p;
   f="["+arr[i].u+"]";
-  if(arr[i].b!==""){f+=arr[i].b;note=numToNote(arr[i].b);
-   if(note!==""&&arr[i].c!==""){f+="("+note+"・"+arr[i].c+")";}
-   else if(arr[i].c!==""||note!==""){f+="("+note+arr[i].c+")";}
+  fc="";
+  fp="";
+  if(arr[i].b!==""){fc+=arr[i].b;note=numToNote(arr[i].b);
+   if(note!==""&&arr[i].c!==""){fc+="("+note+"・"+arr[i].c+")";}
+   else if(arr[i].c!==""||note!==""){fc+="("+note+arr[i].c+")";}
   }
-  if(arr[i].b!==""&&arr[i].d!==""){f+="+";}
-  if(arr[i].d!==""){f+=arr[i].d;note=numToNote(arr[i].d);
-   if(note!==""&&arr[i].e!==""){f+="("+note+"・"+arr[i].e+")";}
-   else if(arr[i].e!==""||note!==""){f+="("+note+arr[i].e+")";}
+  if(arr[i].b!==""&&arr[i].d!==""){fc+="+";}
+  if(arr[i].d!==""){fc+=arr[i].d;note=numToNote(arr[i].d);
+   if(note!==""&&arr[i].e!==""){fc+="("+note+"・"+arr[i].e+")";}
+   else if(arr[i].e!==""||note!==""){fc+="("+note+arr[i].e+")";}
   }
-  if(arr[i].p!==""){f+="<"+arr[i].p+">";}
-  if(arr[i].x!==""){f+="【"+arr[i].x+"】";}
+  if(arr[i].p!==""){fp+="<"+arr[i].p+">";}
+  if(arr[i].x!==""){fp+="【"+arr[i].x+"】";}
 
   da=d["u"+arr[i].u];
   if(da==undefined){
+    f=f+=fc+fp;
     d["u"+arr[i].u]={};
     d["u"+arr[i].u].e=[e];
     d["u"+arr[i].u].f=[f];
+    d["u"+arr[i].u].fc=[fc];
     d["u"+arr[i].u].g=[arr[i].t];
    }
   else if(da.e[da.e.length-1]!==e){
+    f=f+=da.fc[ da.e.length-1]+"->"+fc+fp;
     d["u"+arr[i].u].e.push(e);
     d["u"+arr[i].u].f.push(f);
+    d["u"+arr[i].u].fc.push(fc);
     d["u"+arr[i].u].g.push(arr[i].t);
    }
  }
