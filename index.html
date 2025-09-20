@@ -1956,14 +1956,13 @@ function reverse(e){
  if(window.confirm(eb+"+"+ed+"を反転しますか？")==false){return false}
 
  //反転処理は一つずつ行なってプルダウンも毎回処理する
+ //2025.9.20 特定の環境でedの反映に失敗することがあるため、trainsetを最後に動かすよう仕様変更。
  document.getElementById(e+"b").value="";
  document.getElementById(e+"d").value="";
- trainset();
  document.getElementById(e+"b").value=ed;
  document.getElementById(e+"c").value=ee;
  document.getElementById(e+"b").style.color =edColor;
  document.getElementById(e+"b").style.backgroundColor =edBg;
- trainset();
  document.getElementById(e+"d").value=eb;
  document.getElementById(e+"e").value=ec;
  document.getElementById(e+"d").style.color =ebColor;
