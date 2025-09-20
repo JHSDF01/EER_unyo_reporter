@@ -316,12 +316,29 @@ label.check.right{
  font-weight:bold;
 }
 
+label.check.fixed{
+ color: #999;
+ padding: 0 4px;
+ border-radius: 5px 5px 5px 5px;
+ border:1px dotted #999;
+ font-weight:bold;
+}
+
+label.check.fixed:checked + label {
+ background-color: rgb(255, 0, 0);
+ border:1px groove #000;
+ transition: .3s;
+ font-weight:bold;
+ color: #fff;}
+
+
 label.check:hover,label.check:active {
  color: #000;
  border:1px groove #000;
  background-color: yellow;
  font-weight:bold;
 }
+
 
 /* セレクトボックス*/
 select{
@@ -479,21 +496,21 @@ span.rareSSR{font-weight:bold;color:#fff;background-color:red;}
 //noteは内容が無しの場合は空欄「""」or項目自体無しのどちらでもよい。
 //ここの順番はプルダウンの順番になる
 const trains = [
-{"num":"1001F","note":"ぱいのこ"},
-{"num":"305F" ,"note":""},
-{"num":"2002F","note":""},
-{"num":"1002F","note":"嵐電"},
-{"num":"1501F","note":""},
-{"num":"10F"  ,"note":""},
-{"num":"2001F","note":""},
-{"num":"1201F","note":""},
-{"num":"21F"  ,"note":""},
-{"num":"502F" ,"note":"ポジカ"},
-{"num":"2003F","note":""},
-{"num":"22F"  ,"note":"コカコーラ"},
-{"num":"501F" ,"note":"みかん/ポジカ"},
-{"num":"1101F","note":""},
-{"num":"1502F","note":""},
+{"num":"1001F","note":"ぱいのこ","safety":false},
+{"num":"305F" ,"note":"","safety":false},
+{"num":"2002F","note":"","safety":false},
+{"num":"1002F","note":"嵐電","safety":false},
+{"num":"1501F","note":"","safety":false},
+{"num":"10F"  ,"note":"","safety":false},
+{"num":"2001F","note":"","safety":false},
+{"num":"1201F","note":"","safety":false},
+{"num":"21F"  ,"note":"","safety":false},
+{"num":"502F" ,"note":"ポジカ","safety":true},
+{"num":"2003F","note":"","safety":false},
+{"num":"22F"  ,"note":"コカコーラ","safety":false},
+{"num":"501F" ,"note":"みかん/ポジカ","safety":true},
+{"num":"1101F","note":"","safety":false},
+{"num":"1502F","note":"","safety":true},
 {"num":"不明" },
 ];
 
@@ -825,6 +842,7 @@ const ttIn=[
 <form name="form">
 <div id="mdswitch">
 <input hidden id="station" value=""><input hidden id="tt" value="">
+<input type="hidden" name="fixed" value="false">
 <input type="radio" name="mode" id="easy" onClick="mdchange();" checked><label for="easy" class="radio left">かんたんモード</label><input type="radio" name="mode" id="detail" onClick="mdchange();"><label for="detail" class="radio right">詳細モード</label>
 　
 <span onclick="b_reset();" class="button reset">リセット</span>
@@ -905,6 +923,8 @@ const ttIn=[
 </select>～
 
 遅れ<input id="delay" type="text" size="2" onChange="timeset();">分
+<input type="checkbox" id="fixed" onclick="outp();">
+<label for="fixed" class="check fixed">訂正</label>
 <br>
 
 
@@ -983,6 +1003,8 @@ const ttIn=[
 ▷留置車両が報告できる。<br>
 ▷留置車両の連結状況が報告できる。<br>
 ▷いつも使う場所・機能がON/OFFになった状態を、ブックマークできる。<br>
+▷「訂正」ボタンをクリックすることで、訂正投稿を簡単に投稿できる。(2025.9.20追加)<br>
+▷安全性を向上した編成(501F,502F,1502F)と従来編成を連結して入力すると自動で警告し誤入力を防ぐ。(2025.9.20追加)<br>
 <br>
 <br>
 <b>◆リンク◆</b><br>
@@ -1124,6 +1146,7 @@ function auto() {
   form.d.value = dd;
   form.h.value = dh;
   holi();//祝日判定
+  let fixed = false;
 
   position();
 }
@@ -1167,7 +1190,6 @@ function holi() {
   }
   form.day.value = dv;
 }
-
 
 //かんたんモード用 駅設定
 function staBtn() {
@@ -1333,7 +1355,10 @@ function tt_set() {
  timeset();
 }
 
-
+function fixed(){
+  const label = document.getElementById('fixed');
+  label.classList.toggle('checked', checkbox.checked);
+}
 
 //出発時刻・運用番号の設定
 function timeset() {
@@ -1421,7 +1446,10 @@ function trainset(e) {
       r=window.confirm(e.value+"が複数回入力されています。合っていますか？");
       if(!r){document.getElementById(e.id).value="";return false}
     }
+    // 安全対策ペアのチェック
+    checkSafetyPair(e);
   }
+       
 
   for (let i = 0; i < usearr.length; i++) {
     if (usearr[i] == "" || usearr[i] == "不明") {
@@ -1461,6 +1489,47 @@ function trainset(e) {
   outp();
 }
 
+function checkSafetyPair(e) {
+  if (!e || !e.value || e.value === "不明") return; // 空入力はスキップ
+
+  // 入力された要素のIDを取得
+  const id = e.id; // 例: "t101b" または "t101d"
+
+  // ペアのIDを決定
+  let pairId;
+  if (id.endsWith("b")) {
+    pairId = id.replace(/b$/, "d"); // t101b → t101d
+  } else if (id.endsWith("d")) {
+    pairId = id.replace(/d$/, "b"); // t101d → t101b
+  } else {
+    return; // ペアが不明な場合は終了
+  }
+
+  const pairValue = document.getElementById(pairId)?.value;
+
+  if (!pairValue || pairValue === "不明") return; // ペアが未入力ならスキップ
+
+  // trains マップを作成
+  const trainMap = {};
+  trains.forEach(t => {
+    trainMap[t.num] = t.safety; // boolean化
+  });
+
+  const safety1 = trainMap[e.value] || false;
+  const safety2 = trainMap[pairValue] || false;
+
+  const xor = safety1 !== safety2; // 排他的論理和
+
+  if (xor) {
+    const r = window.confirm(`${e.value} と ${pairValue} は通常連結できない組み合わせです。合っていますか？`);
+    if (!r) {
+      e.value = "";
+      document.getElementById(pairId).value = "";
+    }
+  }
+}
+
+
 function outp() { 
   // 基準駅未選択
   if (form.stations.value<0) {
@@ -1490,7 +1559,7 @@ function outp() {
   let d = new Date(form.y.value, form.mo.value - 1, form.d.value);
   let day = "日月火水木金土".charAt(d.getDay());
   let text = form.y.value + "/" + form.mo.value + "/" + form.d.value + "(" + day + ")#江ノ電運用";
-   //朝夜判定
+  //朝夜判定
    morning=false; night=false;
    for(i=101;i<112;i++){
     ai=document.getElementById("t"+i+"a").innerText;
@@ -1516,6 +1585,11 @@ function outp() {
     }
     }
    }
+  const fixedCheck = document.getElementById("fixed");
+
+  if (fixedCheck.checked) {
+    text = "【訂正】" + text;
+  }
    if(morning){text+="(朝)";}
    if(night){text+="(夜)";}
 
@@ -1882,14 +1956,13 @@ function reverse(e){
  if(window.confirm(eb+"+"+ed+"を反転しますか？")==false){return false}
 
  //反転処理は一つずつ行なってプルダウンも毎回処理する
+ //2025.9.20 特定の環境でedの反映に失敗することがあるため、trainsetを最後に動かすよう仕様変更。
  document.getElementById(e+"b").value="";
  document.getElementById(e+"d").value="";
- trainset();
  document.getElementById(e+"b").value=ed;
  document.getElementById(e+"c").value=ee;
  document.getElementById(e+"b").style.color =edColor;
  document.getElementById(e+"b").style.backgroundColor =edBg;
- trainset();
  document.getElementById(e+"d").value=eb;
  document.getElementById(e+"e").value=ec;
  document.getElementById(e+"d").style.color =ebColor;
