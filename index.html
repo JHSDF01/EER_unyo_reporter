@@ -496,21 +496,21 @@ span.rareSSR{font-weight:bold;color:#fff;background-color:red;}
 //noteは内容が無しの場合は空欄「""」or項目自体無しのどちらでもよい。
 //ここの順番はプルダウンの順番になる
 const trains = [
-{"num":"1001F","note":"ぱいのこ"},
-{"num":"305F" ,"note":""},
-{"num":"2002F","note":""},
-{"num":"1002F","note":"嵐電"},
-{"num":"1501F","note":""},
-{"num":"10F"  ,"note":""},
-{"num":"2001F","note":""},
-{"num":"1201F","note":""},
-{"num":"21F"  ,"note":""},
-{"num":"502F" ,"note":"ポジカ"},
-{"num":"2003F","note":""},
-{"num":"22F"  ,"note":"コカコーラ"},
-{"num":"501F" ,"note":"みかん/ポジカ"},
-{"num":"1101F","note":""},
-{"num":"1502F","note":""},
+{"num":"1001F","note":"ぱいのこ","safety":false},
+{"num":"305F" ,"note":"","safety":false},
+{"num":"2002F","note":"","safety":false},
+{"num":"1002F","note":"嵐電","safety":false},
+{"num":"1501F","note":"","safety":false},
+{"num":"10F"  ,"note":"","safety":false},
+{"num":"2001F","note":"","safety":false},
+{"num":"1201F","note":"","safety":false},
+{"num":"21F"  ,"note":"","safety":false},
+{"num":"502F" ,"note":"ポジカ","safety":true},
+{"num":"2003F","note":"","safety":false},
+{"num":"22F"  ,"note":"コカコーラ","safety":false},
+{"num":"501F" ,"note":"みかん/ポジカ","safety":true},
+{"num":"1101F","note":"","safety":false},
+{"num":"1502F","note":"","safety":true},
 {"num":"不明" },
 ];
 
@@ -1444,7 +1444,10 @@ function trainset(e) {
       r=window.confirm(e.value+"が複数回入力されています。合っていますか？");
       if(!r){document.getElementById(e.id).value="";return false}
     }
+    // 安全対策ペアのチェック
+    checkSafetyPair(e);
   }
+       
 
   for (let i = 0; i < usearr.length; i++) {
     if (usearr[i] == "" || usearr[i] == "不明") {
@@ -1483,6 +1486,47 @@ function trainset(e) {
   }
   outp();
 }
+
+function checkSafetyPair(e) {
+  if (!e || !e.value || e.value === "不明") return; // 空入力はスキップ
+
+  // 入力された要素のIDを取得
+  const id = e.id; // 例: "t101b" または "t101d"
+
+  // ペアのIDを決定
+  let pairId;
+  if (id.endsWith("b")) {
+    pairId = id.replace(/b$/, "d"); // t101b → t101d
+  } else if (id.endsWith("d")) {
+    pairId = id.replace(/d$/, "b"); // t101d → t101b
+  } else {
+    return; // ペアが不明な場合は終了
+  }
+
+  const pairValue = document.getElementById(pairId)?.value;
+
+  if (!pairValue || pairValue === "不明") return; // ペアが未入力ならスキップ
+
+  // trains マップを作成
+  const trainMap = {};
+  trains.forEach(t => {
+    trainMap[t.num] = t.safety; // boolean化
+  });
+
+  const safety1 = trainMap[e.value] || false;
+  const safety2 = trainMap[pairValue] || false;
+
+  const xor = safety1 !== safety2; // 排他的論理和
+
+  if (xor) {
+    const r = window.confirm(`${e.value} と ${pairValue} は通常連結できない組み合わせです。合っていますか？`);
+    if (!r) {
+      e.value = "";
+      document.getElementById(pairId).value = "";
+    }
+  }
+}
+
 
 function outp() { 
   // 基準駅未選択
