@@ -1215,6 +1215,7 @@ function position() {
 
  let v=selectedValue("stations");
  let tt=[];let y;
+ let trainNumber="<span style='font-size:70%;'>列車 </span>"
  let yuki="<span style='font-size:70%;'>行</span>"
  let dome="<span style='font-size:70%;'>止</span>"
  let sta="藤石柳鵠湘江腰高峰七稲極長由和鎌";
@@ -1223,12 +1224,12 @@ function position() {
   v=v.split(","); v0=parseInt(v[0]); v1=parseInt(v[1]);
    for(i in ttOut){
     if(ttOut[i][v0+2]!==null&&ttOut[i][v1+2]!==null){
-     if(ttOut[i][18]){y="≫"+ttOut[i][18]+dome+"≫";}else{y="≫鎌倉"+yuki+"≫";}
+     if(ttOut[i][18]){y="≫"+ttOut[i][0]+trainNumber+ttOut[i][18]+dome+"≫";}else{y="≫"+ttOut[i][0]+trainNumber+"鎌倉"+yuki+"≫";}
      tt.push({"f":"≫","n":ttOut[i][19],"u":ttOut[i][1],"s1":sta.charAt(v0),"t":ttOut[i][v0+2],"t1":ttOut[i][v0+2],"t2":ttOut[i][v1+2],"s2":sta.charAt(v1),"y":y });}
     }
    for(i in ttIn){
     if(ttIn[i][17-v0]!==null&&ttIn[i][17-v1]!==null){
-     if(ttIn[i][18]){y="＜"+ttIn[i][18]+dome+"＜";}else{y="＜藤沢"+yuki+"＜";}
+     if(ttIn[i][18]){y="＜"+ttIn[i][0]+trainNumber+ttIn[i][18]+dome+"＜";}else{y="＜"+ttIn[i][0]+trainNumber+"藤沢"+yuki+"＜";}
      tt.push({"f":"＜","n":ttIn[i][19],"u":ttIn[i][1],"s1":sta.charAt(v0),"t":ttIn[i][17-v1],"t1":ttIn[i][17-v0],"t2":ttIn[i][17-v1],"s2":sta.charAt(v1),"y":y });}
    }
  }
@@ -1237,14 +1238,14 @@ function position() {
   if(v<15){
    for(i in ttOut){
     if(ttOut[i][v+2]!==null){
-     if(ttOut[i][18]){y="≫"+ttOut[i][18]+dome+"≫";}else{y="≫鎌倉"+yuki+"≫";}
+     if(ttOut[i][18]){y="≫"+ttOut[i][0]+trainNumber+ttOut[i][18]+dome+"≫";}else{y="≫"+ttOut[i][0]+trainNumber+"鎌倉"+yuki+"≫";}
      tt.push({"f":"≫","n":ttOut[i][19],"u":ttOut[i][1],"t":ttOut[i][v+2],"t1":ttOut[i][v+2],"y":y ,"s1":"","s2":"","t2":""});}
     }
    }
   if(v>0){
    for(i in ttIn){
     if(ttIn[i][17-v]!==null){
-     if(ttIn[i][18]){y="＜"+ttIn[i][18]+dome+"＜";}else{y="＜藤沢"+yuki+"＜";}
+     if(ttIn[i][18]){y="＜"+ttIn[i][0]+trainNumber+ttIn[i][18]+dome+"＜";}else{y="＜"+ttIn[i][0]+trainNumber+"藤沢"+yuki+"＜";}
      tt.push({"f":"＜","n":ttIn[i][19],"u":ttIn[i][1],"t":ttIn[i][17-v],"t1":ttIn[i][17-v],"y":y ,"s1":"","s2":"","t2":""});}
    }
   }
